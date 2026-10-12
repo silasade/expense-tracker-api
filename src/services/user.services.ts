@@ -1,12 +1,12 @@
-import {  User } from "../models/User.models";
+import { User } from "../models/User.models";
 import { RegisterSchemaType } from "../routes/auth.routes";
 export class UserService {
   public findUserById = async (id: string) => {
-      const user = await User.findById(id);
-      return user;
+    const user = await User.findById(id);
+    return user;
   };
   public findUserByEmail = async (email: string) => {
-    const duplicateUser = await User.findOne({ email });
+    const duplicateUser = await User.findOne({ email }).select("+password");
 
     return duplicateUser;
   };
@@ -19,7 +19,7 @@ export class UserService {
       lastName,
       password,
     });
-    return user
+    return user;
   };
 }
 
