@@ -2,6 +2,7 @@ import express, { type Request, type Response } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import dns from "node:dns";
+import { errorHandler } from "./middlewares/error.middlewares";
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -28,6 +29,8 @@ const createApp = () => {
       res.status(500).json({ message: "Something went wrong", success: false });
     }
   });
+  app.use(errorHandler);
+
   return app;
 };
 
