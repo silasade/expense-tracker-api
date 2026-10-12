@@ -1,16 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { User } from "../models/User.models";
+import { IUser } from "../models/User.models";
 import { userService } from "../services/user.services";
 dotenv.config();
+
+export interface AuthenticateRequest extends Request {
+  user?: IUser;
+}
 
 export interface JWTPayload {
   id: string;
   email: string;
 }
 export const validateUser = async (
-  req: Request,
+  req: AuthenticateRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -51,7 +55,7 @@ export const validateUser = async (
       });
       return;
     }
-    return user;
+    req.user = user;
     next();
   } catch (error) {
     res.status(401).json({
