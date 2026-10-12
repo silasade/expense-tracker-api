@@ -3,16 +3,14 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { IUser } from "../models/User.models";
 import { userService } from "../services/user.services";
+import { JWTPayload } from "../utils/createToken";
 dotenv.config();
 
 export interface AuthenticateRequest extends Request {
   user?: IUser;
 }
 
-export interface JWTPayload {
-  id: string;
-  email: string;
-}
+
 export const validateUser = async (
   req: AuthenticateRequest,
   res: Response,
