@@ -9,7 +9,8 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:db-boundary": "tsx scripts/checkDbBoundary.ts"
   },
   "keywords": [],
   "author": "",
