@@ -7,7 +7,8 @@ import { transactionService } from "../src/services/transaction.service";
 
 describe("Transaction Routes (/api/transactions)", () => {
   const app = createApp();
-  const secretKey = process.env.JWT_SECRET || "fallBackSecret";
+  process.env.JWT_SECRET = process.env.JWT_SECRET || "fallBackSecret";
+  const secretKey = process.env.JWT_SECRET;
 
   const mockUser = {
     _id: "660000000000000000000001",
