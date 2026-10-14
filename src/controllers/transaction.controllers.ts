@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { transactionService } from "../services/transaction.service";
 import {
   CreateTransactionSchemaType,
+  ListTransactionsSchemaType,
   TransactionIdSchemaType,
   UpdateTransactionSchemaType,
 } from "../routes/transaction.routes";
@@ -88,4 +89,61 @@ const updateTransaction = async (
   }
 };
 
-export { createTransaction, getTransactionById, updateTransaction };
+const getAllTransactions = async (
+  req: AuthenticateRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { query } = res.locals.validated as ListTransactionsSchemaType;
+    const transactions = await transactionService.getAllTransactions(
+      String(req.user?._id),
+      query,
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Transactions fetched successfully",
+      data: transactions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteTransaction = async (
+  req: AuthenticateRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { params } = res.locals.validated as TransactionIdSchemaType;
+    const { transactionId } = params;
+    const transaction = await transactionService.deleteTransactions(
+      String(req.user?._id),
+      transactionId,
+    );
+
+    if (!transaction) {
+      res.status(404).json({
+        success: false,
+        message: "Transaction not found",
+      });
+      return;
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Transaction deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  createTransaction,
+  getTransactionById,
+  updateTransaction,
+  deleteTransaction,
+  getAllTransactions,
+};

@@ -4,6 +4,8 @@ import { validate } from "../middlewares/validateRequest.middlewares";
 import { validateUser } from "../middlewares/validateUser.middlewares";
 import {
   createTransaction,
+  deleteTransaction,
+  getAllTransactions,
   getTransactionById,
   updateTransaction,
 } from "../controllers/transaction.controllers";
@@ -57,6 +59,12 @@ export type ListTransactionsSchemaType = z.infer<typeof listTransactionsSchema>;
 const router = express.Router();
 
 router.get(
+  "/",
+  validateUser,
+  validate(listTransactionsSchema),
+  getAllTransactions,
+);
+router.get(
   `/:transactionId`,
   validateUser,
   validate(transactionIdSchema),
@@ -67,6 +75,12 @@ router.patch(
   validateUser,
   validate(updateTransactionSchema),
   updateTransaction,
+);
+router.delete(
+  "/:transactionId",
+  validateUser,
+  validate(transactionIdSchema),
+  deleteTransaction,
 );
 router.post(
   "/",
