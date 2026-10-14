@@ -4,8 +4,10 @@ import jwt from "jsonwebtoken";
 import { validateUser } from "../src/middlewares/validateUser.middlewares";
 import { userService } from "../src/services/user.services";
 
+process.env.JWT_SECRET = process.env.JWT_SECRET || "fallBackSecret";
+
 describe("Validate User Middleware", () => {
-  const secretKey = process.env.JWT_SECRET || "fallBackSecret";
+  const secretKey = process.env.JWT_SECRET;
 
   const createMockRes = () => {
     const res = {} as Response;
@@ -25,7 +27,7 @@ describe("Validate User Middleware", () => {
 
     await validateUser(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       message: "Request must be Authorized",
@@ -63,7 +65,7 @@ describe("Validate User Middleware", () => {
 
     const validToken = jwt.sign(
       { id: fakeUser._id, email: fakeUser.email },
-      secretKey,
+      secretKey!,
     );
 
     const req = {

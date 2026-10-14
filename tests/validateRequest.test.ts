@@ -12,7 +12,7 @@ describe("Validate Request Middleware", () => {
   });
 
   const createMockRes = () => {
-    const res = {} as Response;
+    const res = { locals: {} } as Response;
     res.status = vi.fn().mockReturnValue(res);
     res.json = vi.fn().mockReturnValue(res);
     return res;
@@ -33,6 +33,26 @@ describe("Validate Request Middleware", () => {
     expect(next).toHaveBeenCalledTimes(1);
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).not.toHaveBeenCalled();
+  });
+
+  it("should store parsed (coerced and trimmed) data on res.locals.validated", () => {
+    const coerceSchema = z.object({
+      body: z.object({ name: z.string().trim() }),
+      query: z.object({ from: z.coerce.date() }),
+    });
+    const req = {
+      body: { name: "  Silas  " },
+      query: { from: "2026-10-01" },
+      params: {},
+    } as unknown as Request;
+    const res = createMockRes();
+    const next = vi.fn() as unknown as NextFunction;
+
+    validate(coerceSchema)(req, res, next);
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(res.locals.validated.body.name).toBe("Silas");
+    expect(res.locals.validated.query.from).toBeInstanceOf(Date);
   });
 
   it("should return 400 with formatted error details when validation fails", () => {
