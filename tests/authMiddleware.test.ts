@@ -25,7 +25,7 @@ describe("Validate User Middleware", () => {
 
     await validateUser(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       message: "Request must be Authorized",

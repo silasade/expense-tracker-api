@@ -19,10 +19,10 @@ export const validateUser = async (
   try {
     const headers = req.headers;
     let token: string;
-    if (headers.authorization && headers.authorization.startsWith("Bearer")) {
+    if (headers.authorization && headers.authorization.startsWith("Bearer ")) {
       token = headers.authorization.split(" ")[1];
     } else {
-      res.status(500).json({
+      res.status(401).json({
         success: false,
         message: "Request must be Authorized",
       });
@@ -36,7 +36,14 @@ export const validateUser = async (
       return;
     }
 
-    const secretKey = process.env.JWT_SECRET || "fallBackSecret";
+    const secretKey = process.env.JWT_SECRET ;
+    if(!secretKey){
+      res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+      });
+      return;
+    }
     const decodedUser = jwt.verify(token, secretKey) as JWTPayload;
     if (!decodedUser) {
       res.status(404).json({
@@ -59,7 +66,6 @@ export const validateUser = async (
     res.status(401).json({
       success: false,
       message: "Invalid or expired token",
-      error: (error as Error).message,
     });
   }
 };
