@@ -55,14 +55,15 @@ const transactionSchema = new Schema<ITransaction>(
       required: [true, "User ID is required"],
       type: Schema.Types.ObjectId,
       ref: "User",
+      select:false
     },
   },
   {
     timestamps: true,
   },
-);
+)
 transactionSchema.index({ user: 1, date: -1 });
-export const TransactionModel = mongoose.model<ITransaction>(
+export const Transaction = mongoose.model<ITransaction>(
   "Transaction",
   transactionSchema,
 );

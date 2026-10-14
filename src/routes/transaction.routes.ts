@@ -1,4 +1,8 @@
 import z from "zod";
+import express from "express";
+import { validate } from "../middlewares/validateRequest.middlewares";
+import { validateUser } from "../middlewares/validateUser.middlewares";
+import { createTransaction } from "../controllers/transaction.controllers";
 const objectId = z
   .string()
   .regex(/^[0-9a-fA-F]{24}$/, "Invalid transaction id");
@@ -41,7 +45,18 @@ export type CreateTransactionSchemaType = z.infer<
   typeof createTransactionSchema
 >;
 export type UpdateTransactionSchemaType = z.infer<
-  typeof createTransactionSchema
+  typeof updateTransactionSchema
 >;
 export type TransactionIdSchemaType = z.infer<typeof transactionIdSchema>;
 export type ListTransactionsSchemaType = z.infer<typeof listTransactionsSchema>;
+
+const router = express.Router();
+
+router.post(
+  "/",
+  validateUser,
+  validate(createTransactionSchema),
+  createTransaction,
+);
+
+export default router;
