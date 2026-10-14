@@ -4,7 +4,9 @@ import { ZodSchema, ZodError } from "zod";
 export const validate = (schema: ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse({
+      // Keep the parsed output (coerced dates, trimmed strings, defaults).
+      // Stored on res.locals because req.query is read-only in Express 5.
+      res.locals.validated = schema.parse({
         body: req.body,
         query: req.query,
         params: req.params,
