@@ -10,7 +10,7 @@ export interface ITransaction extends Document {
   description: string;
   date: Date;
 }
-
+export const toObjectId = (id: string) => new mongoose.Types.ObjectId(id)
 const transactionSchema = new Schema<ITransaction>(
   {
     type: {

@@ -2,12 +2,12 @@ export interface ICategoryBreakdown {
   category: string;
   total: number;
   percentage: number;
-  count: number;
 }
 
 export interface IMonthlyTrend {
   year: number;
   month: number;
+  day: number;
   income: number;
   expense: number;
   net: number;
