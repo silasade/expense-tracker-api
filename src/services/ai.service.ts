@@ -37,7 +37,7 @@ Provide your response strictly as a JSON object adhering to this schema:
 `;
 
     const response = await this.ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.8-flash",
       config: { responseMimeType: "application/json" },
       contents: prompt,
     });

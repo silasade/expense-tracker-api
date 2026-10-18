@@ -40,7 +40,7 @@ describe("AIService Unit Tests", () => {
 
     expect(result).toEqual(mockInsightData);
     expect((aiService as any).ai.models.generateContent).toHaveBeenCalledWith({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.8-flash",
       config: { responseMimeType: "application/json" },
       contents: expect.stringContaining("Total Income: 10000"),
     });

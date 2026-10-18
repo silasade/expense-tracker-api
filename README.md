@@ -9,7 +9,7 @@ A production-ready, highly structured RESTful API built with **Node.js**, **Expr
 - **Authentication & Security**: JWT-based authentication with bcrypt password hashing, `helmet` security headers, and strict CORS policies.
 - **Transaction Management**: Full CRUD operations for income and expense transactions with date, category, and type filtering.
 - **Dynamic Reporting (No Stale Data)**: High-performance MongoDB aggregation pipelines computing summaries, category distributions, and daily cash flow trends on the fly.
-- **AI Financial Insights**: Intelligent financial health scoring, spending clues, and actionable savings advice powered by **Google Gemini** (`gemini-2.5-flash`).
+- **AI Financial Insights**: Intelligent financial health scoring, spending clues, and actionable savings advice powered by **Google Gemini** (`gemini-3.8-flash`).
 - **Interactive Swagger Docs**: Live API testing and OpenAPI 3.0 documentation served at `/api-docs`.
 - **Architectural Boundary Enforcement**: Automated CI script enforcing clean separation of concerns (only services interact with database models).
 - **100% Test Coverage**: Comprehensive integration and unit testing suite powered by **Vitest** and **Supertest** (63+ tests).
