@@ -1,5 +1,14 @@
 import z from "zod";
-
+import express from "express";
+import { validateUser } from "../middlewares/validateUser.middlewares";
+import { validate } from "../middlewares/validateRequest.middlewares";
+import {
+  getCategories,
+  getCategoryBreakdown,
+  getSummary,
+  getTrends,
+} from "../controllers/report.controllers";
+const router = express.Router();
 const getCategoryBreakdownSchema = z.object({
   query: z.object({
     category: z.string().min(1, "Category query is missing"),
@@ -21,8 +30,17 @@ const getSummarySchema = z.object({
   }),
 });
 
-export type TGetCategoryBreakdown = z.infer<
-  typeof getCategoryBreakdownSchema
->;
+export type TGetCategoryBreakdown = z.infer<typeof getCategoryBreakdownSchema>;
 export type TGetTrends = z.infer<typeof getTrendsSchema>;
 export type TGetSummary = z.infer<typeof getSummarySchema>;
+
+router.get("/summary", validateUser, validate(getSummarySchema), getSummary);
+router.get("/trends", validateUser, validate(getTrendsSchema), getTrends);
+router.get("/categories", validateUser, getCategories);
+router.get(
+  "/breakdown",
+  validateUser,
+  validate(getCategoryBreakdownSchema),
+  getCategoryBreakdown,
+);
+export default router;

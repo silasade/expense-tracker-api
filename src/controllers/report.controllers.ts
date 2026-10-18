@@ -19,7 +19,7 @@ const getCategoryBreakdown = async (
       query.category,
     );
     return res.status(200).json({
-      message: `${categoryBreakdown} breakdown fetched successfully`,
+      message: `${query.category} breakdown fetched successfully`,
       success: true,
       data: categoryBreakdown,
     });
