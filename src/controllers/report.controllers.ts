@@ -6,6 +6,7 @@ import {
   TGetSummary,
   TGetTrends,
 } from "../routes/report.routes";
+import { aiService } from "../services/ai.service";
 
 const getCategoryBreakdown = async (
   req: AuthenticateRequest,
@@ -87,4 +88,39 @@ const getSummary = async (
   }
 };
 
-export { getCategories, getCategoryBreakdown, getSummary, getTrends };
+const getAiInsights = async (
+  req: AuthenticateRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { query } = res.locals.validated as TGetSummary;
+    const summary = await reportService.getSummary(
+      String(req.user?._id),
+      query,
+    );
+    if (summary.transactionCount === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No transactions recorded yet to generate AI insights",
+      });
+    }
+
+    const insights = await aiService.getAIInsights(summary);
+    return res.status(200).json({
+      success: true,
+      message: "AI Insight generated",
+      data: insights,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  getCategories,
+  getCategoryBreakdown,
+  getSummary,
+  getTrends,
+  getAiInsights,
+};

@@ -11,7 +11,7 @@ class AIService {
   private ai = new GoogleGenAI({ apiKey: this.GEMINI_API_KEY });
 
   public getAIInsights = async (
-    reportSummary: IReportSummary,
+    reportSummary: Omit<IReportSummary,"period">,
   ): Promise<IAIInsights> => {
     const prompt = `
 You are an expert personal financial advisor. Analyze the following user financial summary and category breakdown to provide actionable insights.
@@ -48,4 +48,4 @@ Provide your response strictly as a JSON object adhering to this schema:
   };
 }
 
-export const aiServie = new AIService();
+export const aiService = new AIService();
