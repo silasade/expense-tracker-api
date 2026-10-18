@@ -112,6 +112,51 @@ Interactive documentation is available at **`/api-docs`**. Below is a summary of
 
 ---
 
+## How AI Financial Insights Work
+
+The `/api/reports/insights` endpoint pairs on-the-fly MongoDB aggregation metrics with Google Gemini (`gemini-3.8-flash`) to deliver structured, personalized financial advice.
+
+### 1. Dynamic Metric Aggregation
+Before contacting the AI model, the system executes an aggregation pipeline via `reportService.getSummary()` to calculate real-time financial metrics directly from the user's recorded transactions:
+- **Total Income & Total Expense**: Aggregated across all non-deleted user transactions.
+- **Net Savings & Savings Rate (%)**: Calculated ratio of surplus to income.
+- **Transaction Count Guard**: If no transactions exist, returns `400 Bad Request` to avoid generating hallucinations from empty data.
+- **Category Spending Distribution**: Itemized spending totals and percentage share per category.
+
+### 2. Contextual Prompting & Native JSON Enforcement
+The calculated summary is formatted and forwarded to `aiService.getAIInsights()`. The service prompts Google Gemini as an expert personal financial advisor using native JSON mode (`responseMimeType: "application/json"` via `@google/genai`):
+
+- **Health Score**: A calculated 1-100 rating based on savings rate and spending balance.
+- **Summary Assessment**: A 2-sentence executive summary of financial health.
+- **Spending Clues**: Key observations highlighting spending patterns and anomalies.
+- **Actionable Tips**: Realistic, high-impact suggestions to reduce expense leaks.
+- **Potential Monthly Savings**: Estimated numerical savings achievable by following the recommendations.
+
+### 3. Example Response Payload
+
+```json
+{
+  "success": true,
+  "message": "AI Insight generated",
+  "data": {
+    "healthScore": 82,
+    "summaryAssessment": "Healthy savings rate with consistent income surplus. Food and entertainment represent the largest discretionary spending categories.",
+    "spendingClues": [
+      "Dining and food delivery account for 38% of all monthly outflow.",
+      "Savings rate is currently 26%, exceeding the recommended 20% baseline."
+    ],
+    "actionableTips": [
+      "Allocate a weekly grocery meal-prep budget to reduce takeout by $150.",
+      "Audit recurring monthly digital subscriptions for redundant services.",
+      "Direct 5% of net income into an emergency fund buffer."
+    ],
+    "potentialMonthlySavings": 220
+  }
+}
+```
+
+---
+
 ## Getting Started
 
 ### Prerequisites
