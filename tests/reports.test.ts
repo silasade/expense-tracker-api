@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { createApp } from "../src/app";
 import { userService } from "../src/services/user.services";
 import { reportService } from "../src/services/report.service";
+import { aiService } from "../src/services/ai.service";
 
 describe("Report Routes (/api/reports)", () => {
   const app = createApp();
@@ -224,6 +225,65 @@ describe("Report Routes (/api/reports)", () => {
         mockUser._id,
         "Utilities",
       );
+    });
+  });
+
+  describe("GET /api/reports/insights", () => {
+    it("should return 400 if user has no transactions to analyze", async () => {
+      vi.spyOn(reportService, "getSummary").mockResolvedValue({
+        totalIncome: 0,
+        totalExpense: 0,
+        netSavings: 0,
+        savingsRate: 0,
+        transactionCount: 0,
+        categoryBreakdown: [],
+      });
+
+      const response = await request(app)
+        .get("/api/reports/insights")
+        .set("Authorization", authHeader);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        success: false,
+        message: "No transactions recorded yet to generate AI insights",
+      });
+    });
+
+    it("should generate and return AI insights when transactions exist", async () => {
+      const mockSummary = {
+        totalIncome: 5000,
+        totalExpense: 2000,
+        netSavings: 3000,
+        savingsRate: 60,
+        transactionCount: 10,
+        categoryBreakdown: [{ category: "Food", total: 1000, percentage: 50 }],
+      };
+
+      const mockInsights = {
+        healthScore: 85,
+        summaryAssessment: "Great job maintaining a 60% savings rate.",
+        spendingClues: ["50% of your expenses go towards Food."],
+        actionableTips: ["Consider buying groceries in bulk to lower food costs."],
+        potentialMonthlySavings: 200,
+      };
+
+      vi.spyOn(reportService, "getSummary").mockResolvedValue(mockSummary);
+      const getAIInsightsSpy = vi
+        .spyOn(aiService, "getAIInsights")
+        .mockResolvedValue(mockInsights);
+
+      const response = await request(app)
+        .get("/api/reports/insights")
+        .set("Authorization", authHeader);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        success: true,
+        message: "AI Insight generated",
+        data: mockInsights,
+      });
+      expect(getAIInsightsSpy).toHaveBeenCalledWith(mockSummary);
     });
   });
 });

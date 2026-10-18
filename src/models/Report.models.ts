@@ -25,3 +25,11 @@ export interface IReportSummary {
   transactionCount: number;
   categoryBreakdown: ICategoryBreakdown[];
 }
+
+export interface IAIInsights {
+  healthScore: number; // 1 - 100 rating
+  summaryAssessment: string;
+  spendingClues: string[]; // Patterns detected (e.g. "Dining out represents 42% of total spend")
+  actionableTips: string[]; // Specific tips to reduce spending
+  potentialMonthlySavings?: number;
+}

@@ -3,6 +3,7 @@ import express from "express";
 import { validateUser } from "../middlewares/validateUser.middlewares";
 import { validate } from "../middlewares/validateRequest.middlewares";
 import {
+  getAiInsights,
   getCategories,
   getCategoryBreakdown,
   getSummary,
@@ -35,6 +36,13 @@ export type TGetTrends = z.infer<typeof getTrendsSchema>;
 export type TGetSummary = z.infer<typeof getSummarySchema>;
 
 router.get("/summary", validateUser, validate(getSummarySchema), getSummary);
+router.get(
+  "/insights",
+  validateUser,
+  validate(getSummarySchema),
+  getAiInsights,
+);
+
 router.get("/trends", validateUser, validate(getTrendsSchema), getTrends);
 router.get("/categories", validateUser, getCategories);
 router.get(
