@@ -6,6 +6,8 @@ import { errorHandler } from "./middlewares/error.middlewares";
 import authRoutes from "./routes/auth.routes";
 import transactionRoutes from "./routes/transaction.routes";
 import reportRoutes from "./routes/report.routes";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const createApp = () => {
@@ -18,6 +20,10 @@ const createApp = () => {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Swagger Documentation
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
   app.use("/api/auth", authRoutes);
 
   app.use("/api/transactions", transactionRoutes);
