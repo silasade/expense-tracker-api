@@ -81,7 +81,7 @@ class ReportService {
   };
   public getTrends = async (
     userId: string,
-    filterBy?: 7 | 30 | 365,
+    filterBy: "7" | "30" | "365",
   ): Promise<IMonthlyTrend[]> => {
     const matchStage: any = {
       user: toObjectId(userId),
@@ -90,7 +90,7 @@ class ReportService {
     if (filterBy) {
       const now = new Date();
       const pastDate = new Date();
-      pastDate.setDate(now.getDate() - filterBy);
+      pastDate.setDate(now.getDate() - Number(filterBy));
 
       matchStage.date = {
         $gte: pastDate, // from 7 days ago
@@ -134,8 +134,8 @@ class ReportService {
     }));
   };
   public getSummary = async (
-    date: { startDate?: Date; endDate?: Date },
     userId: string,
+    date: { startDate?: Date; endDate?: Date },
   ): Promise<Omit<IReportSummary, "period">> => {
     const matchStage: any = { user: toObjectId(userId) };
     if (date.startDate || date.endDate) {
