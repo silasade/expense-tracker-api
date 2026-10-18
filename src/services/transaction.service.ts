@@ -28,15 +28,27 @@ class TransactionService {
     const transactions = await Transaction.find(filter).sort({ date: -1 });
     return transactions;
   };
+
+  public getTransactionsByCategory = async (
+    userId: string,
+    category: string,
+  ) => {
+    const filter: any = { category, user: userId };
+    const transactions = await Transaction.find(filter).sort({
+      date: -1,
+    });
+    return transactions;
+  };
+
   public deleteTransactions = async (
     userId: string,
     transactionId: TransactionIdSchemaType["params"]["transactionId"],
   ) => {
-   const transaction= await Transaction.findOneAndDelete({
+    const transaction = await Transaction.findOneAndDelete({
       user: userId,
       _id: transactionId,
     });
-    return transaction
+    return transaction;
   };
   public getTransactionById = async (
     userId: string,

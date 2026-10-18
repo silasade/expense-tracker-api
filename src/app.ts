@@ -5,6 +5,7 @@ import dns from "node:dns";
 import { errorHandler } from "./middlewares/error.middlewares";
 import authRoutes from "./routes/auth.routes";
 import transactionRoutes from "./routes/transaction.routes";
+import reportRoutes from "./routes/report.routes";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const createApp = () => {
@@ -18,7 +19,9 @@ const createApp = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api/auth", authRoutes);
-  app.use("/api/transactions",transactionRoutes)
+
+  app.use("/api/transactions", transactionRoutes);
+  app.use("/api/reports", reportRoutes);
   app.get("/health", (req: Request, res: Response) => {
     try {
       const timeStamp = new Date();
