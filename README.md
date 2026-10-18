@@ -18,56 +18,34 @@ A production-ready, highly structured RESTful API built with **Node.js**, **Expr
 
 ## Request & Response Lifecycle
 
-The diagram below illustrates how an incoming HTTP request flows through authentication guards, input validation, the service layer, and down to MongoDB and Gemini AI before returning a structured JSON response:
+The diagram below illustrates the end-to-end flow of an authenticated request through the system:
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Client as Client / Frontend
-    participant App as Express Middleware (CORS / Helmet / JSON)
-    participant Auth as Auth Guard (validateUser)
-    participant Validator as Validation (Zod)
-    participant Controller as Controller
+    actor Client
+    participant API as API Layer (Auth & Validation)
     participant Service as Service Layer
-    participant DB as MongoDB (Aggregation)
-    participant Gemini as Google Gemini AI
-    participant ErrorHandler as Error Handler
+    participant DB as MongoDB
+    participant AI as Google Gemini
 
-    Client->>App: HTTP Request (e.g., GET /api/reports/insights)
-    App->>Auth: Pass through security headers & JSON parser
+    Client->>API: HTTP Request + Bearer Token
+    Note over API: Verify JWT & Validate Body (Zod)
 
-    alt Route requires Authentication
-        Auth->>Auth: Verify JWT Bearer Token & fetch User
-        alt Invalid or Missing Token
-            Auth-->>Client: 401 Unauthorized { success: false, message: ... }
-        end
+    API->>Service: Execute Business Logic
+
+    alt Standard CRUD & Dynamic Reports
+        Service->>DB: Query / Aggregation Pipeline
+        DB-->>Service: Aggregated Financial Data
+    else AI Insights Endpoint
+        Service->>DB: Fetch User Transactions
+        DB-->>Service: Transaction Summary
+        Service->>AI: Prompt with Financial Context
+        AI-->>Service: Health Score & Actionable Tips
     end
 
-    Auth->>Validator: Validate Request Body / Query Params (Zod)
-    alt Validation Fails
-        Validator-->>Client: 400 Bad Request { success: false, errors: [...] }
-    end
-
-    Validator->>Controller: Invokes Controller Handler
-    Controller->>Service: Call business logic (e.g. getSummary / getAIInsights)
-
-    alt Database Query
-        Service->>DB: Execute query or aggregation pipeline
-        DB-->>Service: Return documents or aggregation result
-    end
-
-    alt AI Insights Requested
-        Service->>Gemini: Send prompt with financial metrics (JSON mode)
-        Gemini-->>Service: Return structured financial tips & clues
-    end
-
-    alt Uncaught Exception
-        Service-->>ErrorHandler: Error propagated via next(error)
-        ErrorHandler-->>Client: 500 / Custom status { success: false, message: ... }
-    end
-
-    Service-->>Controller: Return formatted DTO result
-    Controller-->>Client: 200 / 201 OK { success: true, message: ..., data: ... }
+    Service-->>API: Formatted Result
+    API-->>Client: JSON Response (200 / 201)
 ```
 
 ---
