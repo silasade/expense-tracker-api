@@ -19,7 +19,6 @@ const createApp = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api/auth", authRoutes);
-  app.use(errorHandler);
 
   app.use("/api/transactions", transactionRoutes);
   app.use("/api/reports", reportRoutes);
@@ -35,6 +34,7 @@ const createApp = () => {
       res.status(500).json({ message: "Something went wrong", success: false });
     }
   });
+  app.use(errorHandler);
 
   return app;
 };
