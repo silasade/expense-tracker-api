@@ -16,6 +16,21 @@ A production-ready, highly structured RESTful API built with **Node.js**, **Expr
 
 ---
 
+## Tech Stack
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Runtime & Language** | Node.js, TypeScript | Strongly typed asynchronous server runtime |
+| **Web Framework** | Express 5 | Next-generation routing, controllers, and middleware |
+| **Database & ODM** | MongoDB, Mongoose | Schema modeling, indexed queries, and aggregation pipelines |
+| **Artificial Intelligence** | Google Gemini (`@google/genai`) | Real-time financial health scoring and spending analysis (`gemini-3.8-flash`) |
+| **API Documentation** | OpenAPI 3.0, Swagger UI | Interactive API explorer and contract testing at `/api-docs` |
+| **Validation & Schema** | Zod | Strict runtime schema parsing and payload validation |
+| **Security & Auth** | JWT, Bcrypt.js, Helmet, CORS | Stateless token auth, password hashing, and header protection |
+| **Testing & Tooling** | Vitest, Supertest, TSX | High-speed unit/integration tests and TypeScript execution |
+
+---
+
 ## Request & Response Lifecycle
 
 The diagram below illustrates the end-to-end flow of an authenticated request through the system:
