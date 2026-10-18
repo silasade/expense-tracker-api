@@ -14,6 +14,7 @@ const connectDb = async () => {
     await mongoose.connect(mongoDBURL, {
       serverSelectionTimeoutMS: 30000,
     });
+    console.log("MongoDB connected")
   } catch (error) {
     console.error(`failed to connect to database ${error as Error}`);
     throw error;
