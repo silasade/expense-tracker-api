@@ -177,6 +177,24 @@ npm start
 
 ---
 
+## Interactive API Documentation (Swagger)
+
+Once the application is running, open your browser and navigate to:
+```text
+http://localhost:<PORT>/api-docs
+```
+*(For example, `http://localhost:5111/api-docs` or `http://localhost:5000/api-docs` depending on your configured `PORT`).*
+
+### How to Authenticate & Test Protected Routes in Swagger:
+1. Under the **Auth** section, expand `POST /api/auth/login` (or `POST /api/auth/register`) and click **Try it out**.
+2. Provide your credentials and click **Execute**.
+3. Copy the `token` string from the JSON response body.
+4. Scroll to the top right of the Swagger UI and click the green **Authorize** padlock button.
+5. Paste your token into the **Value** field and click **Authorize**, then **Close**.
+6. All protected routes across **Transactions**, **Reports**, and **AI Insights** can now be executed directly in the browser.
+
+---
+
 ## Testing
 
 The test suite runs with **Vitest** and validates unit logic, integration routes, middleware, and architecture boundaries:
